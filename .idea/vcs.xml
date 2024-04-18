@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/BasicVoting/androidVoting" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/news" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/project143" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/software_testing/software_testing" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/voteVellore/VoteVellore" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/votingApp/Voting-Sytem" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/votingApp2/VotingApp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/votingApp2/VotingApp1" vcs="Git" />
+  </component>
+</project>
