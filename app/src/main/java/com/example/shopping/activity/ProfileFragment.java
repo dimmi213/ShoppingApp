@@ -1,14 +1,21 @@
 package com.example.shopping.activity;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shopping.R;
+import com.example.shopping.activity.profile.Profile_MyOrdersFragment;
+import com.example.shopping.activity.profile.Profile_PersonalProfileFragment;
+import com.example.shopping.activity.profile.Profile_SettingsFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +32,8 @@ public class ProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    AppCompatButton button_my_account, button_my_orders, button_setting;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -49,18 +58,39 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        button_my_account = view.findViewById(R.id.button_my_account);
+        button_my_orders = view.findViewById(R.id.button_my_orders);
+        button_setting = view.findViewById(R.id.button_setting);
+
+        button_my_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new Profile_PersonalProfileFragment(), R.id.fragment_profile_my_account);
+            }
+        });
+
+        button_my_orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new Profile_MyOrdersFragment(), R.id.fragment_profile_my_orders);
+            }
+        });
+
+        button_setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                replaceFragment(new Profile_SettingsFragment(), R.id.fragment_profile_settings);
+            }
+        });
+
+        return view;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+    private void replaceFragment(Fragment fragment, int containerId) {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(containerId, fragment);
+        transaction.commit();
     }
 }

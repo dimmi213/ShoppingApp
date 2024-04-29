@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.androidApplication)
 }
@@ -42,6 +43,7 @@ dependencies {
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
     implementation(libs.rxjava3RetrofitAdapter)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

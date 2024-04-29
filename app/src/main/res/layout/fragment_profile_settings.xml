@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ececec"
-    tools:context=".activity.ProfileFragment">
+    tools:context=".activity.profile.Profile_SettingsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/email_bio_profile">
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button_my_account"
+                        android:id="@+id/notification_settings"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginStart="32dp"
@@ -87,14 +87,14 @@
                         style="@android:style/Widget.Button"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/button_background"
-                        android:drawableStart="@drawable/personal"
+                        android:drawableStart="@drawable/notification_settings"
                         android:drawablePadding="20dp"
                         android:paddingStart="20dp"
-                        android:text="Tài khoản của tôi"
+                        android:text="Cài đặt thông báo"
                         android:textAlignment="viewStart" />
 
                     <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button_my_orders"
+                        android:id="@+id/security_settings"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginStart="32dp"
@@ -105,30 +105,23 @@
                         style="@android:style/Widget.Button"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/button_background"
-                        android:drawableStart="@drawable/orders"
+                        android:drawableStart="@drawable/security_settings"
                         android:drawablePadding="20dp"
                         android:paddingStart="20dp"
-                        android:text="Đơn hàng"
+                        android:text="Thiết lập riêng tư"
                         android:textAlignment="viewStart" />
 
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:id="@+id/button_setting"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="32dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/button_background"
-                        android:drawableStart="@drawable/settings"
-                        android:drawablePadding="20dp"
-                        android:paddingStart="20dp"
-                        android:text="Cài đặt riêng tư"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        style="@android:style/Widget.Button"
-                        android:textAlignment="viewStart" />
                 </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/fragment_profile_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/email_bio_profile"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
