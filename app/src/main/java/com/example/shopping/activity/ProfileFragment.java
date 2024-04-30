@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +14,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.example.shopping.R;
 import com.example.shopping.activity.profile.Profile_MyOrdersFragment;
 import com.example.shopping.activity.profile.Profile_PersonalProfileFragment;
@@ -84,6 +87,21 @@ public class ProfileFragment extends Fragment {
                 replaceFragment(new Profile_SettingsFragment(), R.id.fragment_profile_settings);
             }
         });
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            String userName = bundle.getString("userName");
+            String userEmail = bundle.getString("userEmail");
+            String profileImageURL = bundle.getString("profileImageURL");
+
+            ImageView imageProfile = view.findViewById(R.id.profile_image_URL);
+            TextView nameProfile = view.findViewById(R.id.name_profile);
+            TextView emailProfile = view.findViewById(R.id.email_bio_profile);
+
+            Glide.with(this).load(profileImageURL).into(imageProfile);
+            nameProfile.setText(userName);
+            emailProfile.setText(userEmail);
+        }
 
         return view;
     }

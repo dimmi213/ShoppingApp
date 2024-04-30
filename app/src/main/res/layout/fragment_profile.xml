@@ -34,7 +34,7 @@
                     tools:layout_editor_absoluteY="-24dp" />
 
                 <ImageView
-                    android:id="@+id/image_profile"
+                    android:id="@+id/profile_image_URL"
                     android:layout_width="166dp"
                     android:layout_height="128dp"
                     android:src="@drawable/profile"
@@ -43,29 +43,28 @@
                     tools:layout_editor_absoluteY="124dp"
                     app:layout_constraintStart_toStartOf="@+id/top_background"
                     app:layout_constraintTop_toBottomOf="@+id/top_background"
-                    tools:ignore="MissingConstraints" />
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/profile_image_description" />
 
                 <TextView
                     android:id="@+id/name_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Linh Dan"
-                    android:layout_marginTop="16dp"
                     android:textSize="25sp"
                     android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/profile_image_URL"
+                    app:layout_constraintStart_toStartOf="@id/profile_image_URL"
+                    app:layout_constraintEnd_toEndOf="@id/profile_image_URL"
+                    android:layout_marginTop="16dp" />
 
-                    app:layout_constraintEnd_toEndOf="@+id/image_profile"
-                    app:layout_constraintStart_toStartOf="@+id/image_profile"
-                    app:layout_constraintTop_toBottomOf="@+id/image_profile" />
                 <TextView
                     android:id="@+id/email_bio_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="linhdan@gmail.com"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="@+id/name_profile"
-                    app:layout_constraintStart_toStartOf="@+id/name_profile"
-                    app:layout_constraintTop_toBottomOf="@+id/name_profile" />
+                    app:layout_constraintTop_toBottomOf="@id/name_profile"
+                    app:layout_constraintStart_toStartOf="@id/name_profile"
+                    app:layout_constraintEnd_toEndOf="@id/name_profile" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
