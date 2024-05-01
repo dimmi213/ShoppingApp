@@ -1,4 +1,4 @@
-package com.example.shopping.activity;
+package com.example.shopping.activity.auth;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText username, email_address, password, confirm_password;
     AppCompatButton signup;
     TextView login;
-    ImageView google, facebook;
+    RelativeLayout google, facebook;
 
     ActivityRegisterBinding binding;
     FirebaseAuth firebaseAuth;
@@ -66,6 +66,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = binding.password.getText().toString();
                 String confirm_password = binding.confirmPassword.getText().toString();
 
+                String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
                 if (username.isEmpty() || email_address.isEmpty() || password.isEmpty() || confirm_password.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Không được để trống.", Toast.LENGTH_SHORT).show();
                     return;
@@ -74,6 +76,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!password.equals(confirm_password)) {
                     Toast.makeText(RegisterActivity.this, "Xác nhận mật khẩu không khớp.", Toast.LENGTH_SHORT).show();
                     return;
+                }
+
+                if (!email_address.matches(email_pattern)) {
+                    Toast.makeText(RegisterActivity.this, "Địa chỉ email không đúng định dạng.", Toast.LENGTH_SHORT).show();
                 }
 
                 firebaseAuth.createUserWithEmailAndPassword(email_address, password)

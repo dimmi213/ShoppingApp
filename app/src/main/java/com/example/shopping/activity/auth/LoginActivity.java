@@ -1,4 +1,4 @@
-package com.example.shopping.activity;
+package com.example.shopping.activity.auth;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.shopping.R;
+import com.example.shopping.activity.MainActivity;
 import com.example.shopping.databinding.ActivityLoginBinding;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -28,6 +30,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -36,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText email_address, password;
     AppCompatButton login;
     TextView forget_password, signup;
-    ImageView google, facebook;
+    RelativeLayout google, facebook;
     ActivityLoginBinding binding;
     FirebaseAuth firebaseAuth;
     private static final int RC_SIGN_IN = 9001;
@@ -62,9 +65,15 @@ public class LoginActivity extends AppCompatActivity {
                 String email_address = binding.emailAddress.getText().toString();
                 String password = binding.password.getText().toString();
 
+                String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
                 if (email_address.isEmpty() || password.isEmpty()) {
                     Toast.makeText(LoginActivity.this, "Không được để trống.", Toast.LENGTH_SHORT).show();
                     return;
+                }
+
+                if (!email_address.matches(email_pattern)) {
+                    Toast.makeText(LoginActivity.this, "Địa chỉ email không đúng định dạng.", Toast.LENGTH_SHORT).show();
                 }
 
                 firebaseAuth.signInWithEmailAndPassword(email_address, password)
@@ -73,20 +82,25 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = firebaseAuth.getCurrentUser();
-                                    if (user != null && user.isEmailVerified()) {
-                                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                        finish();
+                                    if (user != null) {
+                                        if (user.isEmailVerified()) {
+                                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            finish();
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Vui lòng xác thực email trước khi đăng nhập.", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
-                                        Toast.makeText(LoginActivity.this, "Vui lòng xác thực email trước khi đăng nhập.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Người dùng không tồn tại.", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    if (task.getException().getMessage().toLowerCase().contains("password")) {
+                                    Exception exception = task.getException();
+                                    if (exception instanceof FirebaseAuthInvalidCredentialsException) {
                                         Toast.makeText(LoginActivity.this, "Mật khẩu không đúng.", Toast.LENGTH_SHORT).show();
-                                    } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                                    } else if (exception instanceof FirebaseAuthInvalidUserException) {
                                         Toast.makeText(LoginActivity.this, "Email không tồn tại.", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -98,6 +112,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
+        forget_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
             }
         });
         google.setOnClickListener(new View.OnClickListener() {

@@ -6,7 +6,7 @@
     android:gravity="center"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".activity.LoginActivity">
+    tools:context=".activity.auth.LoginActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -125,6 +125,7 @@
     </RelativeLayout>
     
     <RelativeLayout
+        android:id="@+id/google"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/round_back_dark_blue5_15"
@@ -134,7 +135,6 @@
 
 
         <ImageView
-            android:id="@+id/google"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:srcCompat="@drawable/google"
@@ -154,6 +154,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/facebook"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:background="@drawable/round_back_dark_blue5_15"
@@ -162,7 +163,6 @@
         android:layout_marginEnd="20dp" >
 
         <ImageView
-            android:id="@+id/facebook"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:srcCompat="@drawable/facebook"
