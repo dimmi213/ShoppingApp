@@ -1,5 +1,5 @@
 [versions]
-agp = "8.3.2"
+agp = "8.4.0-rc02"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -14,6 +14,9 @@ multidex = "2.0.1"
 glide = "4.16.0"
 rxjava = "3.0.0"
 rxjava3RetrofitAdapter = "3.0.0"
+firebaseAuth = "22.3.1"
+googleGmsGoogleServices = "4.4.1"
+firebaseDatabase = "21.0.0"
 
 
 [libraries]
@@ -32,6 +35,9 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
 rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxjava" }
 rxjava3RetrofitAdapter = { group = "com.github.akarnokd", name = "rxjava3-retrofit-adapter", version.ref = "rxjava3RetrofitAdapter" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
