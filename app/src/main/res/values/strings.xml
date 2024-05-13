@@ -9,4 +9,11 @@
 
     <string name="profile_image_description">Profile picture</string>
     <string name="web_client_id">946607805527-2hkcdiun9sghuv8tpmcb6fnahd76jsl4.apps.googleusercontent.com</string>
+
+
+    <string name="facebook_app_id">955749649369750</string>
+    <string name="fb_login_protocol_scheme">eed8bd1356242dcc935d1c0387fbe00d</string>
+    <string name="facebook_client_token">VzSiQcXRmi2kyjzcA+mYLEtbGVs=</string>
+
+
 </resources>

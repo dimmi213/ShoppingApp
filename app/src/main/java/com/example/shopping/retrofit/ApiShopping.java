@@ -1,12 +1,16 @@
 package com.example.shopping.retrofit;
 
 //import android.database.Observable;
-import io.reactivex.rxjava3.core.Observable;
 
 import com.example.shopping.model.CategoryModel;
 import com.example.shopping.model.ProductModel;
+import com.example.shopping.model.UserModel;
 
+import io.reactivex.rxjava3.core.Observable;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 public interface ApiShopping {
     @GET("getCategory.php")
@@ -14,5 +18,16 @@ public interface ApiShopping {
 
     @GET("getProduct.php")
     Observable<ProductModel> getProduct();
+
+    @POST("postUserRegister.php")
+    @FormUrlEncoded
+    Observable<UserModel> postUserRegister(
+            @Field("userId") String userId,
+            @Field("userEmail") String userEmail,
+            @Field("userName") String userName,
+            @Field("userPassword") String userPassword,
+            @Field("profileImageUrl") String profileImageUrl
+    );
+
 
 }

@@ -28,7 +28,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     EditText email_address;
     AppCompatButton forget_password;
     TextView login;
-    RelativeLayout google, facebook;
+    ImageView google, facebook, twitter;
 
     ActivityForgetPasswordBinding binding;
     FirebaseAuth firebaseAuth;
@@ -45,6 +45,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         google = binding.google;
         facebook = binding.facebook;
         login = binding.login;
+        twitter = binding.twitter;
 
         forget_password.setOnClickListener(new View.OnClickListener() {
             @Override

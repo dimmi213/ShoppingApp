@@ -1,14 +1,14 @@
 package com.example.shopping.activity.auth;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.shopping.databinding.ActivityRegisterBinding;
+import com.example.shopping.retrofit.ApiShopping;
+import com.example.shopping.retrofit.RetrofitClient;
+import com.example.shopping.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,16 +34,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class RegisterActivity extends AppCompatActivity {
     EditText username, email_address, password, confirm_password;
     AppCompatButton signup;
     TextView login;
-    RelativeLayout google, facebook;
+    ImageView google, facebook, twitter;
 
     ActivityRegisterBinding binding;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore firebaseFireStore;
-    String userID;
+    String userId;
+    ApiShopping apiShopping;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFireStore = FirebaseFirestore.getInstance();
+        apiShopping = RetrofitClient.getInstance(Utils.BASE_URL).create(ApiShopping.class);
 
         username = binding.username;
         email_address = binding.emailAddress;
@@ -57,6 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
         google = binding.google;
         facebook = binding.facebook;
         login = binding.login;
+        twitter = binding.twitter;
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,18 +79,36 @@ public class RegisterActivity extends AppCompatActivity {
 
                 String email_pattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
-                if (username.isEmpty() || email_address.isEmpty() || password.isEmpty() || confirm_password.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, "Không được để trống.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (!password.equals(confirm_password)) {
-                    Toast.makeText(RegisterActivity.this, "Xác nhận mật khẩu không khớp.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 if (!email_address.matches(email_pattern)) {
                     Toast.makeText(RegisterActivity.this, "Địa chỉ email không đúng định dạng.", Toast.LENGTH_SHORT).show();
+                }
+                if (TextUtils.isEmpty(username)){
+                    Toast.makeText(getApplicationContext(), "Không được để trống tên.", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(email_address)) {
+                    Toast.makeText(getApplicationContext(), "Không được để trống email.", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(getApplicationContext(), "Không được để trống mật khẩu.", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(getApplicationContext(), "Không được để trống xác nhận mật khẩu.", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (!password.equals(confirm_password)) {
+                        Toast.makeText(getApplicationContext(), "Xác nhận mật khẩu không khớp.", Toast.LENGTH_SHORT).show();
+                        compositeDisposable.add(apiShopping.postUserRegister("", email_address, username, password, null)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                        userModel -> {
+                                            if (userModel.isSuccess()){
+                                                Toast.makeText(RegisterActivity.this, "Đăng kí thành công.", Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        },
+                                        throwable -> {
+                                            Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                ));
+                    }
                 }
 
                 firebaseAuth.createUserWithEmailAndPassword(email_address, password)
@@ -88,22 +117,24 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = firebaseAuth.getCurrentUser();
+                                    userId = firebaseAuth.getCurrentUser().getUid();
                                     if (user != null) {
                                         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> emailTask) {
                                                 if (emailTask.isSuccessful()) {
                                                     Toast.makeText(RegisterActivity.this, "Đăng kí thành công. Mở hòm thư để xác thực.", Toast.LENGTH_SHORT).show();
-                                                    userID = firebaseAuth.getCurrentUser().getUid();
-                                                    DocumentReference documentReference = firebaseFireStore.collection("users").document(userID);
+                                                    DocumentReference documentReference = firebaseFireStore.collection("users").document(userId);
                                                     Map<String, Object> user = new HashMap<>();
-                                                    user.put("username", username);
-                                                    user.put("email", email_address);
-                                                    user.put("password", password);
+                                                    user.put("userId", userId);
+                                                    user.put("userName", username);
+                                                    user.put("userEmail", email_address);
+                                                    user.put("profileImageUrl", null);
+                                                    user.put("userPassword", password);
                                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void unused) {
-                                                            Log.d(TAG, "onSuccess: user " + userID);
+                                                            Log.d(TAG, "onSuccess: user " + userId);
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
@@ -126,6 +157,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
+
             }
         });
 

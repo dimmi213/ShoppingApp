@@ -15,6 +15,8 @@ glide = "4.16.0"
 rxjava = "3.0.0"
 rxjava3RetrofitAdapter = "3.0.0"
 firebaseAuth = "22.3.1"
+googleGmsGoogleServices = "4.4.1"
+firebaseDatabase = "21.0.0"
 
 
 [libraries]
@@ -34,6 +36,8 @@ rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjav
 rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxjava" }
 rxjava3RetrofitAdapter = { group = "com.github.akarnokd", name = "rxjava3-retrofit-adapter", version.ref = "rxjava3RetrofitAdapter" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
+googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }

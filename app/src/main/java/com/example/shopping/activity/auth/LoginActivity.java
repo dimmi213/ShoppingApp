@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,28 +19,47 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.example.shopping.R;
 import com.example.shopping.activity.MainActivity;
 import com.example.shopping.databinding.ActivityLoginBinding;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     EditText email_address, password;
     AppCompatButton login;
     TextView forget_password, signup;
-    RelativeLayout google, facebook;
+    ImageView google, twitter, facebook;
     ActivityLoginBinding binding;
     FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    private CallbackManager callbackManager;
     private static final int RC_SIGN_IN = 9001;
 
     @Override
@@ -58,7 +76,13 @@ public class LoginActivity extends AppCompatActivity {
         signup = binding.signup;
         google = binding.google;
         facebook = binding.facebook;
+        twitter = binding.twitter;
 
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
+        callbackManager = CallbackManager.Factory.create();
+
+        //NORMAL LOGIN
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +109,9 @@ public class LoginActivity extends AppCompatActivity {
                                     if (user != null) {
                                         if (user.isEmailVerified()) {
                                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
-                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            intent.putExtra("email", user.getEmail());
+                                            startActivity(intent);
                                             finish();
                                         } else {
                                             Toast.makeText(LoginActivity.this, "Vui lòng xác thực email trước khi đăng nhập.", Toast.LENGTH_SHORT).show();
@@ -120,9 +146,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, ForgetPasswordActivity.class));
             }
         });
+
+        //GOOGLE
         google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                firebaseAuth = FirebaseAuth.getInstance();
+//                firebaseUser = firebaseAuth.getCurrentUser();
+                FirebaseAuth.getInstance().signOut();
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.web_client_id))
                         .requestEmail()
@@ -134,21 +165,52 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
+
+        //FACEBOOK
+        LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                firebaseAuthWithFacebook(loginResult.getAccessToken());
+            }
+
+            @Override
+            public void onCancel() {
+                Toast.makeText(LoginActivity.this, "Hủy đăng nhập bằng Facebook", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(LoginActivity.this, "Đăng nhập Facebook lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        facebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
+            }
+        });
     }
 
+    //RESULT
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                String username = account.getDisplayName();
-                String email_address = account.getEmail();
-                String profile_image_URL = account.getPhotoUrl().toString();
-                firebaseAuthWithGoogle(account.getIdToken(), username, email_address, profile_image_URL);
-            } catch (ApiException e) {
-                Log.w(TAG, "Đăng nhập bằng Google thất bại.", e);
+            if (resultCode == RESULT_OK) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                try {
+                    GoogleSignInAccount account = task.getResult(ApiException.class);
+                    String username = account.getDisplayName();
+                    String email_address = account.getEmail();
+                    String profile_image_URL = account.getPhotoUrl().toString();
+                    firebaseAuthWithGoogle(account.getIdToken(), username, email_address, profile_image_URL);
+                } catch (ApiException e) {
+                    Log.w(TAG, "Đăng nhập bằng Google thất bại.", e);
+                }
+            } else {
+                Toast.makeText(this, "Hủy bỏ đăng nhập bằng Google.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -160,25 +222,68 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Đăng nhập thành công, chuyển hướng đến MainActivity
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class)
-                                    .putExtra("username", userName)
-                                    .putExtra("email_address", userEmail)
-                                    .putExtra("profile_image_URL", profileImageURL));
-                            finish();
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            if (firebaseUser != null) {
+                                saveUserDataToFirestore(firebaseUser);
+                            }
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Xác thực thất bại.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        }
+    private void firebaseAuthWithFacebook(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        firebaseAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                            if (firebaseUser != null) {
+                                saveUserDataToFirestore(firebaseUser);
+                            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void saveUserDataToFirestore(FirebaseUser firebaseUser) {
+        String userId = firebaseUser.getUid();
+        String userEmail = firebaseUser.getEmail();
+        String userName = firebaseUser.getDisplayName();
+        String profileImageUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("userId", userId);
+        user.put("userName", userName);
+        user.put("userEmail", userEmail);
+        user.put("profileImageUrl", profileImageUrl);
+
+        db.collection("users")
+                .document(userId)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(LoginActivity.this, "Lỗi lưu dữ liệu lên Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
