@@ -1,5 +1,6 @@
 package com.example.shopping.activity.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shopping.R;
+import com.example.shopping.activity.auth.UpdatePhoneNumberActivity;
 import com.example.shopping.activity.profile.personal_profile.ChangeEmailFragment;
 import com.example.shopping.activity.profile.personal_profile.Details_PersonalProfileFragment;
 
@@ -28,7 +30,7 @@ public class Profile_PersonalProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private RelativeLayout personal_profile, address, bank, reset_password, change_email_address;
+    private RelativeLayout personal_profile, address, bank, reset_password, change_email_address, update_phone_number;
 
     public Profile_PersonalProfileFragment() {
         // Required empty public constructor
@@ -72,6 +74,7 @@ public class Profile_PersonalProfileFragment extends Fragment {
         bank = view.findViewById(R.id.bank);
         reset_password = view.findViewById(R.id.reset_password);
         change_email_address = view.findViewById(R.id.change_email_address);
+        update_phone_number = view.findViewById(R.id.update_phone_number);
 
         personal_profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +86,20 @@ public class Profile_PersonalProfileFragment extends Fragment {
         change_email_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { replaceFragment(new ChangeEmailFragment()); }
+        });
+
+        reset_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                replaceFragment(new ChangePhoneNumberFragment());
+            }
+        });
+
+        update_phone_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), UpdatePhoneNumberActivity.class));
+            }
         });
 
         return view;

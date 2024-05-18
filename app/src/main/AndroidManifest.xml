@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -17,10 +22,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".activity.profile.personal_profile.Details_PersonalProfileActivity"
+            android:name=".activity.auth.VerifyOTPActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.profile.PersonalProfileActivity"
+            android:name=".activity.auth.UpdatePhoneNumberActivity"
             android:exported="false" />
         <activity
             android:name=".activity.auth.LoginActivity"
