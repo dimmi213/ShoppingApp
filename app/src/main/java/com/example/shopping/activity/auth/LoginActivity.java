@@ -44,7 +44,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
@@ -55,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText email_address, password;
     AppCompatButton login;
     TextView forget_password, signup;
-    ImageView google, twitter, facebook;
+    ImageView google, phone_number, facebook;
     ActivityLoginBinding binding;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -76,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         signup = binding.signup;
         google = binding.google;
         facebook = binding.facebook;
-        twitter = binding.twitter;
+        phone_number = binding.phoneNumber;
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
@@ -134,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //SIGN UP
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,8 +151,6 @@ public class LoginActivity extends AppCompatActivity {
         google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                firebaseAuth = FirebaseAuth.getInstance();
-//                firebaseUser = firebaseAuth.getCurrentUser();
                 FirebaseAuth.getInstance().signOut();
                 GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                         .requestIdToken(getString(R.string.web_client_id))
@@ -188,6 +186,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
+            }
+        });
+        phone_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, UpdatePhoneNumberActivity.class));
             }
         });
     }

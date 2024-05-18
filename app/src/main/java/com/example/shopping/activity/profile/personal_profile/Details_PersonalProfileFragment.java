@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shopping.R;
+import com.example.shopping.activity.auth.UpdatePhoneNumberActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,6 +106,64 @@ public class Details_PersonalProfileFragment extends Fragment {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         //FETCH DATA
+        fectchData();
+
+        //UPDATE NAME
+        userName_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    String newName = userName_edit.getText().toString();
+                    updateUserName(newName);
+                    fectchData();
+                }
+            }
+        });
+
+
+        //EDIT GENDER
+        relative_userGender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showGender();
+            }
+        });
+
+        //EDIT DATE OF BIRTH
+        relative_userDoB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePicker();
+                fectchData();
+            }
+        });
+
+        //UPDATE PHONE NUMBER
+        relative_userPhoneNumber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), UpdatePhoneNumberActivity.class);
+                intent.putExtra("userId", firebaseUser.getUid());
+                startActivity(intent);
+            }
+        });
+
+        //CHANGE EMAIL
+        relative_userEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.features, new ChangeEmailFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+                fectchData();
+            }
+        });
+
+        return view;
+    }
+
+    private void fectchData(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference userRef = db.collection("users").document(firebaseUser.getUid());
 
@@ -145,47 +205,6 @@ public class Details_PersonalProfileFragment extends Fragment {
                 Log.e(TAG, "onFailure fetch user: " + e.getMessage());
             }
         });
-
-        //EDIT NAME
-        userName_edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    String newName = userName_edit.getText().toString();
-                    updateUserName(newName);
-                }
-            }
-        });
-
-
-        //EDIT GENDER
-        relative_userGender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showGender();
-            }
-        });
-
-        //EDIT DATE OF BIRTH
-        relative_userDoB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePicker();
-            }
-        });
-
-        //CHANGE EMAIL
-        relative_userEmail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.features, new ChangeEmailFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-
-        return view;
     }
 
     //SHOW GENDER
@@ -281,6 +300,7 @@ public class Details_PersonalProfileFragment extends Fragment {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess gender:");
                         userGender_edit.setText(gender);
+                        fectchData();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -301,6 +321,7 @@ public class Details_PersonalProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess userName:");
+                        fectchData();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -321,6 +342,7 @@ public class Details_PersonalProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "onSuccess DoB:");
+                        fectchData();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -330,5 +352,4 @@ public class Details_PersonalProfileFragment extends Fragment {
                     }
                 });
     }
-
 }
