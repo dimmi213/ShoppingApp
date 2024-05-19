@@ -1,5 +1,5 @@
 [versions]
-agp = "8.4.0-rc02"
+agp = "8.3.2"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
@@ -17,6 +17,9 @@ rxjava3RetrofitAdapter = "3.0.0"
 firebaseAuth = "22.3.1"
 googleGmsGoogleServices = "4.4.1"
 firebaseDatabase = "21.0.0"
+notification_badge_version = "1.0.4"
+eventbus = "3.3.1"
+gson = "2.10.1"
 
 
 [libraries]
@@ -37,7 +40,12 @@ rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = 
 rxjava3RetrofitAdapter = { group = "com.github.akarnokd", name = "rxjava3-retrofit-adapter", version.ref = "rxjava3RetrofitAdapter" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+notification = { group = "com.nex3z", name = "notification-badge", version.ref = "notification_badge_version" }
+eventbus = { group = "org.greenrobot", name = "eventbus", version.ref = "eventbus"}
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 googleGmsGoogleServices = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+
+

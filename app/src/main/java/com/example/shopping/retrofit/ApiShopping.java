@@ -1,6 +1,7 @@
 package com.example.shopping.retrofit;
 
 //import android.database.Observable;
+import io.reactivex.rxjava3.core.Observable;
 
 import com.example.shopping.model.CategoryModel;
 import com.example.shopping.model.ProductModel;
@@ -27,6 +28,21 @@ public interface ApiShopping {
             @Field("userName") String userName,
             @Field("userPassword") String userPassword,
             @Field("profileImageUrl") String profileImageUrl
+    );
+
+
+
+    @POST("order.php")
+    @FormUrlEncoded
+    Observable<UserModel> createOder(
+            @Field("email") String email,
+            @Field("phonenumber") String phonenumber,
+            @Field("totalprice") String totalPrice,
+            @Field("iduser") int id,
+            @Field("address") String address,
+            @Field("amount") int amount,
+            @Field("detail") String detail
+
     );
 
 
