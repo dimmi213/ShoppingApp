@@ -16,9 +16,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.helper.widget.MotionEffect;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.shopping.activity.MainActivity;
 import com.example.shopping.databinding.ActivityVerifyOtpactivityBinding;
+import com.example.shopping.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,7 +57,7 @@ public class VerifyOTPActivity extends AppCompatActivity {
     private DocumentReference userRef;
 
     private String verificationId;
-    private String userId;
+    private String userId, phoneNumber;
     private int failedAttempts = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +77,11 @@ public class VerifyOTPActivity extends AppCompatActivity {
         progressBar = binding.progressBar;
 
         phone_number.setText(String.format("+84 %s", getIntent().getStringExtra("mobile")));
-        firebaseAuth = FirebaseAuth.getInstance();
-        verificationId = getIntent().getStringExtra("verificationId");
+        phoneNumber = "+84" + getIntent().getStringExtra("mobile");
         userId = getIntent().getStringExtra("userId");
+        firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        verificationId = getIntent().getStringExtra("verificationId");
 
         setUpOTPinputs();
 
@@ -173,10 +183,10 @@ public class VerifyOTPActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
                 update_phone_number.setVisibility(View.VISIBLE);
                 if (task.isSuccessful()) {
-                    String phoneNumber = "+84" + getIntent().getStringExtra("mobile");
-                    updatePhoneNumber(phoneNumber);
-
                     Toast.makeText(VerifyOTPActivity.this, "Xác thực thành công.", Toast.LENGTH_SHORT).show();
+
+                    saveInMySQL(userId, phoneNumber);
+                    updatePhoneNumber(phoneNumber);
 
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -194,37 +204,12 @@ public class VerifyOTPActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUserByPhone(FirebaseUser firebaseUser) {
-        db = FirebaseFirestore.getInstance();
-        userId = firebaseUser.getUid();
-
-        String newPhoneNumber = "+84" + getIntent().getStringExtra("mobile");
-
-        DocumentReference userRef = db.collection("users").document(userId);
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("userId", userId);
-        userData.put("userPhoneNumber", newPhoneNumber);
-
-        userRef.set(userData).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Log.d(TAG, "onSuccess: user " + userId);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "onFailure: user " + e.toString());
-            }
-        });
-    }
-
     private void updatePhoneNumber(String newPhoneNumber) {
-        db = FirebaseFirestore.getInstance();
-        userId = firebaseUser != null ? firebaseUser.getUid() : null;
+        String finalUserPhoneNumber = newPhoneNumber;
+        userId = getIntent().getStringExtra("userId");
         if (userId != null) {
-            newPhoneNumber = "+84" + getIntent().getStringExtra("mobile");
             userRef = db.collection("users").document(userId);
-            userRef.update("userPhoneNumber", newPhoneNumber)
+            userRef.update("userPhoneNumber", finalUserPhoneNumber)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
@@ -239,7 +224,35 @@ public class VerifyOTPActivity extends AppCompatActivity {
                     });
         } else {
             Log.d(TAG, "onFailure: userId is null, cannot update phone number");
-//            registerUserByPhone(firebaseUser);
         }
     }
+
+    private void saveInMySQL(String userId, String userPhoneNumber) {
+        RequestQueue requestQueue = Volley.newRequestQueue(VerifyOTPActivity.this);
+        String url = Utils.BASE_URL + "putPhoneNumber.php";
+        String finalUserPhoneNumber = userPhoneNumber;
+        String finalUserId = userId;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(MotionEffect.TAG, "Response from server: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(MotionEffect.TAG, "Error: " + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("userId", finalUserId);
+                params.put("userPhoneNumber", finalUserPhoneNumber);
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
+    }
+
 }

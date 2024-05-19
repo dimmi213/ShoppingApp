@@ -29,6 +29,7 @@ public class Menu_ProfileFragment extends Fragment {
     private String mParam2;
     private TextView order_history, order_waiting_for_pay, order_waiting_for_delivery, order_delivery, order_rate;
     private RelativeLayout personal_profile, settings;
+    private String userId;
 
     public Menu_ProfileFragment() {
         // Required empty public constructor
@@ -78,10 +79,18 @@ public class Menu_ProfileFragment extends Fragment {
         personal_profile = view.findViewById(R.id.personal_profile);
         settings = view.findViewById(R.id.settings);
 
+        String userId = getArguments().getString("userId");
+
         personal_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new Profile_PersonalProfileFragment());
+                Bundle bundle = new Bundle();
+                bundle.putString("userId", userId);
+
+                Profile_PersonalProfileFragment personalProfileFragment = new Profile_PersonalProfileFragment();
+                personalProfileFragment.setArguments(bundle);
+
+                replaceFragment(personalProfileFragment);
             }
         });
 
