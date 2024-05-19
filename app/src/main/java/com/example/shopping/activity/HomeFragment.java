@@ -90,6 +90,10 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getActivity(), "Connect internet fail", Toast.LENGTH_SHORT).show();
         }
 
+        if(Utils.cartList == null){
+            Utils.cartList = new ArrayList<>();
+        }
+
 
         return v;
     }

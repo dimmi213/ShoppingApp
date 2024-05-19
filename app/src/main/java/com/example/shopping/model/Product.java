@@ -1,6 +1,8 @@
 package com.example.shopping.model;
 
-public class Product {
+import java.io.Serializable;
+
+public class Product implements Serializable {
     int id;
     String name;
     String price;
@@ -48,11 +50,11 @@ public class Product {
         this.description = description;
     }
 
-    public int getCategory() {
-        return category;
-    }
-
-    public void setCategory(int category) {
-        this.category = category;
-    }
+//    public int getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(int category) {
+//        this.category = category;
+//    }
 }
