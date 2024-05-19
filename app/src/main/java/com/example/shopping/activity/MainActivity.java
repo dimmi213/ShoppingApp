@@ -73,6 +73,9 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         Bundle bundle = new Bundle();
                         bundle.putString("userId", userId);
+                        bundle.putString("userName", userName);
+                        bundle.putString("userEmail", userEmail);
+                        bundle.putString("userPhoneNumber", userPhoneNumber);
                         ProfileFragment profileFragment = new ProfileFragment();
                         profileFragment.setArguments(bundle);
 
