@@ -15,11 +15,16 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shopping.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.iammert.library.readablebottombar.ReadableBottomBar;
 
 public class MainActivity extends AppCompatActivity {
 
     ReadableBottomBar readableBottomBar;
+    private String userId, userName, userPhoneNumber, userEmail;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,14 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        userId = firebaseUser.getUid();
+        userName = firebaseUser.getDisplayName();
+        userEmail = firebaseUser.getEmail();
+        userPhoneNumber = firebaseUser.getPhoneNumber();
 
         readableBottomBar = findViewById(R.id.readableBottomBar);
 
@@ -58,7 +71,15 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 2:
-                        fragmentTransaction.replace(R.id.content, new ProfileFragment());
+                        Bundle bundle = new Bundle();
+                        bundle.putString("userId", userId);
+                        bundle.putString("userName", userName);
+                        bundle.putString("userEmail", userEmail);
+                        bundle.putString("userPhoneNumber", userPhoneNumber);
+                        ProfileFragment profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(bundle);
+
+                        fragmentTransaction.replace(R.id.content, profileFragment);
                         fragmentTransaction.commit();
                         break;
                 }

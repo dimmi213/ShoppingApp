@@ -31,6 +31,7 @@ public class Profile_PersonalProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private RelativeLayout personal_profile, address, bank, reset_password, change_email_address, update_phone_number;
+    private String userId, userName, userPhoneNumber, userEmail;
 
     public Profile_PersonalProfileFragment() {
         // Required empty public constructor
@@ -76,6 +77,13 @@ public class Profile_PersonalProfileFragment extends Fragment {
         change_email_address = view.findViewById(R.id.change_email_address);
         update_phone_number = view.findViewById(R.id.update_phone_number);
 
+        userId = getArguments().getString("userId");
+        userName = getArguments().getString("userName");
+        userEmail = getArguments().getString("userEmail");
+        userPhoneNumber = getArguments().getString("userPhoneNumber");
+
+
+
         personal_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +106,12 @@ public class Profile_PersonalProfileFragment extends Fragment {
         update_phone_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), UpdatePhoneNumberActivity.class));
+                Intent intent = new Intent(getContext(), UpdatePhoneNumberActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userEmail", userEmail);
+                intent.putExtra("userPhoneNumber", userPhoneNumber);
+                startActivity(intent);
             }
         });
 

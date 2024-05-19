@@ -26,7 +26,7 @@ public class UpdatePhoneNumberActivity extends AppCompatActivity {
 
     private ActivityUpdatePhoneNumberBinding binding;
     private String verificationId;
-    private String userId;
+    private String userId, userName, userPhoneNumber, userEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +38,9 @@ public class UpdatePhoneNumberActivity extends AppCompatActivity {
         progressBar = binding.progressBar;
 
         userId = getIntent().getStringExtra("userId");
+        userName = getIntent().getStringExtra("userName");
+        userEmail = getIntent().getStringExtra("userEmail");
+        userPhoneNumber = getIntent().getStringExtra("userPhoneNumber");
 
         update_phone_number.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +87,9 @@ public class UpdatePhoneNumberActivity extends AppCompatActivity {
                             intent.putExtra("mobile", new_phone_number.getText().toString());
                             intent.putExtra("verificationId", verificationId);
                             intent.putExtra("userId", userId);
+                            intent.putExtra("userName", userName);
+                            intent.putExtra("userEmail", userEmail);
+                            intent.putExtra("userPhoneNumber", userPhoneNumber);
                             startActivity(intent);
                         }
                     }

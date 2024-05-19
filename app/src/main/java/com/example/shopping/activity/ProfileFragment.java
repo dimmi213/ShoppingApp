@@ -67,6 +67,7 @@ public class ProfileFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     AppCompatButton logout;
+    private String userId, userName, userPhoneNumber, userEmail;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -99,9 +100,20 @@ public class ProfileFragment extends Fragment {
         email_address = view.findViewById(R.id.email_address);
         logout = view.findViewById(R.id.logout);
 
+        userId = getArguments().getString("userId");
+        userName = getArguments().getString("userName");
+        userEmail = getArguments().getString("userEmail");
+        userPhoneNumber = getArguments().getString("userPhoneNumber");
+
         FrameLayout featuresLayout = view.findViewById(R.id.features);
 
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", userId);
+        bundle.putString("userName", userName);
+        bundle.putString("userEmail", userEmail);
+        bundle.putString("userPhoneNumber", userPhoneNumber);
         Menu_ProfileFragment menuProfileFragment = new Menu_ProfileFragment();
+        menuProfileFragment.setArguments(bundle);
         getChildFragmentManager().beginTransaction().replace(R.id.features, menuProfileFragment).commit();
 
         firebaseAuth = FirebaseAuth.getInstance();

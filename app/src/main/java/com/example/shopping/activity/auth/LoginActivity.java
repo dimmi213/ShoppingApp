@@ -16,9 +16,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.shopping.R;
 import com.example.shopping.activity.MainActivity;
 import com.example.shopping.databinding.ActivityLoginBinding;
+import com.example.shopping.utils.Utils;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -109,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                                         if (user.isEmailVerified()) {
                                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                            intent.putExtra("email", user.getEmail());
+                                            intent.putExtra("userId", user.getUid());
                                             startActivity(intent);
                                             finish();
                                         } else {
@@ -209,7 +216,10 @@ public class LoginActivity extends AppCompatActivity {
                     String username = account.getDisplayName();
                     String email_address = account.getEmail();
                     String profile_image_URL = account.getPhotoUrl().toString();
-                    firebaseAuthWithGoogle(account.getIdToken(), username, email_address, profile_image_URL);
+                    String idToken = account.getIdToken();
+
+                    firebaseAuthWithGoogle(idToken, username, email_address, profile_image_URL);
+
                 } catch (ApiException e) {
                     Log.w(TAG, "Đăng nhập bằng Google thất bại.", e);
                 }
@@ -229,6 +239,7 @@ public class LoginActivity extends AppCompatActivity {
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                             if (firebaseUser != null) {
                                 saveUserDataToFirestore(firebaseUser);
+                                saveInMySQLDBbyGoogle(idToken, userName, userEmail, profileImageURL.toString());
                             }
                         } else {
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -289,5 +300,32 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Lỗi lưu dữ liệu lên Firestore", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void saveInMySQLDBbyGoogle(String userId, String userName, String userEmail, String profileImageURL) {
+        RequestQueue requestQueue = Volley.newRequestQueue(LoginActivity.this);
+        String url = Utils.BASE_URL + "postUserLoginByGoogle.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d(TAG, "Response from server: " + response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error: " + error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("userId", userId);
+                params.put("userName", userName);
+                params.put("userEmail", userEmail);
+                params.put("profileImageURL", profileImageURL);
+                return params;
+            }
+        };
+
+        requestQueue.add(stringRequest);
     }
 }

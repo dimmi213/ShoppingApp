@@ -148,6 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                             Log.d(TAG, "onFailure: user " + e.toString());
                                                         }
                                                     });
+
                                                     saveInMySQLDB();
                                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                                     finish();
@@ -168,45 +169,8 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
 
-//            private void saveInMySQLDB() {
-//                String userId = firebaseAuth.getCurrentUser().getUid();
-//                String userName = firebaseAuth.getCurrentUser().getDisplayName();
-//                String userEmail = firebaseAuth.getCurrentUser().getEmail();
-//
-//                RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
-//                String url = Utils.BASE_URL + "postUserRegister.php";
-//                StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.d(TAG, "Response from server: " + response);
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.d(TAG, "Error: " + error.toString());
-//                    }
-//                }) {
-//                    @Override
-//                    protected Map<String, String> getParams() {
-//                        Map<String, String> params = new HashMap<>();
-//                        params.put("userId", userId);
-//                        params.put("userName", userName != null ? userName : "");
-//                        params.put("userEmail", userEmail != null ? userEmail : "");
-//                        params.put("userPassword", password.toString());
-//                        params.put("profileImageUrl", "null");
-//                        params.put("userPhoneNumber", "null");
-//                        params.put("userGender", "null");
-//                        params.put("userDoB", "null");
-//                        return params;
-//                    }
-//                };
-//
-//                requestQueue.add(stringRequest);
-//            }
             private void saveInMySQLDB() {
                 String userId = firebaseAuth.getCurrentUser().getUid();
-//                String userName = firebaseAuth.getCurrentUser().getDisplayName();
-//                String userEmail = firebaseAuth.getCurrentUser().getEmail();
 
                 RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
                 String url = Utils.BASE_URL + "postUserRegister.php";
