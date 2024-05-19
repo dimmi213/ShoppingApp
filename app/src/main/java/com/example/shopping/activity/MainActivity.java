@@ -119,13 +119,44 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (i){
                     case 0:
-                        fragmentTransaction.replace(R.id.content, new HomeFragment());
-                        fragmentTransaction.commit();
+                        userRef = db.collection("users").document(firebaseUser.getUid());
+                        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        userId = firebaseUser.getUid();
+                                        userName = document.getString("userName");
+                                        userPhoneNumber = document.getString("userPhoneNumber");
+                                        userEmail = firebaseUser.getEmail();
+
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("userId", userId);
+                                        bundle.putString("userName", userName);
+                                        bundle.putString("userEmail", userEmail);
+                                        bundle.putString("userPhoneNumber", userPhoneNumber);
+
+                                        HomeFragment homeFragment = new HomeFragment();
+                                        homeFragment.setArguments(bundle);
+
+                                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                        fragmentTransaction.replace(R.id.content, homeFragment);
+                                        fragmentTransaction.commit();
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
                         break;
 
                     case 1:
-                        fragmentTransaction.replace(R.id.content, new NotiFragment());
-                        fragmentTransaction.commit();
+                        FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction1.replace(R.id.content, new NotiFragment());
+                        fragmentTransaction1.commit();
                         break;
 
                     case 2:
@@ -146,11 +177,13 @@ public class MainActivity extends AppCompatActivity {
                                         bundle.putString("userName", userName);
                                         bundle.putString("userEmail", userEmail);
                                         bundle.putString("userPhoneNumber", userPhoneNumber);
+
                                         ProfileFragment profileFragment = new ProfileFragment();
                                         profileFragment.setArguments(bundle);
 
-                                        fragmentTransaction.replace(R.id.content, profileFragment);
-                                        fragmentTransaction.commit();
+                                        FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                                        fragmentTransaction2.replace(R.id.content, profileFragment);
+                                        fragmentTransaction2.commit();
                                     } else {
                                         Log.d(TAG, "No such document");
                                     }

@@ -24,11 +24,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
     Context context;
     List<Product> array;
+    String userId;
+    String userEmail;
+    String userPhoneNumber;
+    String userName;
     public boolean isRecyclerViewItemClicked = false;
 
-    public ProductAdapter(Context context, List<Product> array) {
+    public ProductAdapter(Context context, List<Product> array, String userId, String userName, String userEmail, String userPhoneNumber) {
         this.context = context;
         this.array = array;
+        this.userId = userId;
+        this.userName =userName;
+        this.userEmail = userEmail;
+        this.userPhoneNumber = userPhoneNumber;
+
     }
 
     @NonNull
@@ -60,6 +69,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
                     //click
                     Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("userId", userId);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("userEmail", userEmail);
+                    intent.putExtra("userPhoneNumber", userPhoneNumber);
                     intent.putExtra("detail", product);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);

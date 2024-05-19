@@ -34,6 +34,8 @@ public class DetailActivity extends AppCompatActivity {
     Toolbar toolbar;
     Product product;
     NotificationBadge badge;
+    private String userId, userName, userPhoneNumber, userEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,12 @@ public class DetailActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        userId = getIntent().getStringExtra("userId");
+        userName = getIntent().getStringExtra("userName");
+        userEmail = getIntent().getStringExtra("userEmail");
+        userPhoneNumber = getIntent().getStringExtra("userPhoneNumber");
+
     }
 
     private void initControl() {
@@ -132,8 +140,12 @@ public class DetailActivity extends AppCompatActivity {
         frameLayoutcart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cart = new Intent(getApplicationContext(), CartActivity.class);
-                startActivity(cart);
+                Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userEmail", userEmail);
+                intent.putExtra("userPhoneNumber", userPhoneNumber);
+                startActivity(intent);
             }
         });
         if(Utils.cartList != null){

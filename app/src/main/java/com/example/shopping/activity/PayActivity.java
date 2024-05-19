@@ -1,7 +1,5 @@
 package com.example.shopping.activity;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -24,12 +21,9 @@ import com.example.shopping.R;
 import com.example.shopping.retrofit.ApiShopping;
 import com.example.shopping.retrofit.RetrofitClient;
 import com.example.shopping.utils.Utils;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
@@ -50,7 +44,7 @@ public class PayActivity extends AppCompatActivity {
     FirebaseUser firebaseUser;
     FirebaseFirestore db;
     DocumentReference userRef;
-    private String userId, userPhoneNumber, userEmail;
+    private String userId, userName, userPhoneNumber, userEmail;
     long totalprice;
     int totalItem;
 
@@ -65,47 +59,52 @@ public class PayActivity extends AppCompatActivity {
             return insets;
         });
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
+//        firebaseAuth = FirebaseAuth.getInstance();
+//        firebaseUser = firebaseAuth.getCurrentUser();
+//        db = FirebaseFirestore.getInstance();
+//
+//        userId = firebaseUser.getUid();
 
-        userId = firebaseUser.getUid();
+        userId = getIntent().getStringExtra("userId");
+        userName = getIntent().getStringExtra("userName");
+        userEmail = getIntent().getStringExtra("userEmail");
+        userPhoneNumber = getIntent().getStringExtra("userPhoneNumber");
 
-        fetchData();
+//        fetchData();
         initView();
         countItem();
         initControl();
     }
 
-    private void fetchData() {
-        db = FirebaseFirestore.getInstance();
-        userRef = db.collection("users").document(userId);
-
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-
-                    if (documentSnapshot.contains("userEmail")) {
-                        String email = documentSnapshot.getString("userEmail");
-                        txtphonenumber.setText(email);
-                    }
-                    if (documentSnapshot.contains("userPhoneNumber")) {
-                        String phoneNumber = documentSnapshot.getString("userPhoneNumber");
-                        txtemail.setText(phoneNumber);
-                    }
-                } else {
-                    txtphonenumber.setText("");
-                    txtemail.setText("");
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "onFailure fetch user: " + e.getMessage());
-            }
-        });
-    }
+//    private void fetchData() {
+//        db = FirebaseFirestore.getInstance();
+//        userRef = db.collection("users").document(userId);
+//
+//        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot.exists()) {
+//
+//                    if (documentSnapshot.contains("userEmail")) {
+//                        String email = documentSnapshot.getString("userEmail");
+//                        txtphonenumber.setText(email);
+//                    }
+//                    if (documentSnapshot.contains("userPhoneNumber")) {
+//                        String phoneNumber = documentSnapshot.getString("userPhoneNumber");
+//                        txtemail.setText(phoneNumber);
+//                    }
+//                } else {
+//                    txtphonenumber.setText("");
+//                    txtemail.setText("");
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.e(TAG, "onFailure fetch user: " + e.getMessage());
+//            }
+//        });
+//    }
 
 
     private void countItem() {
@@ -127,6 +126,8 @@ public class PayActivity extends AppCompatActivity {
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         totalprice = getIntent().getLongExtra("totalprice", 0);
         txttotalprice.setText(decimalFormat.format(totalprice));
+        txtemail.setText(userEmail);
+        txtphonenumber.setText(userPhoneNumber);
 //        txtemail.setText("mymin00007@gmail.com");
 ////        txtemail.setText(Utils.user_current.getEmail());
 //        txtphonenumber.setText("0379874924");

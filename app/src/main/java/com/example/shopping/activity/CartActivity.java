@@ -36,6 +36,7 @@ public class CartActivity extends AppCompatActivity {
     CartAdapter adapter;
     List<Cart> cartList;
     long totalpriceP;
+    private String userId, userName, userPhoneNumber, userEmail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,11 @@ public class CartActivity extends AppCompatActivity {
         initView();
         initControl();
         calculateTotalPrice();
+
+        userId = getIntent().getStringExtra("userId");
+        userName = getIntent().getStringExtra("userName");
+        userEmail = getIntent().getStringExtra("userEmail");
+        userPhoneNumber = getIntent().getStringExtra("userPhoneNumber");
     }
 
     private void calculateTotalPrice() {
@@ -86,6 +92,10 @@ public class CartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PayActivity.class);
                 intent.putExtra("totalprice", totalpriceP);
+                intent.putExtra("userId", userId);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userEmail", userEmail);
+                intent.putExtra("userPhoneNumber", userPhoneNumber);
                 startActivity(intent);
             }
         });

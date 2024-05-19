@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -104,8 +103,6 @@ public class ProfileFragment extends Fragment {
         userName = getArguments().getString("userName");
         userEmail = getArguments().getString("userEmail");
         userPhoneNumber = getArguments().getString("userPhoneNumber");
-
-        FrameLayout featuresLayout = view.findViewById(R.id.features);
 
         Bundle bundle = new Bundle();
         bundle.putString("userId", userId);
