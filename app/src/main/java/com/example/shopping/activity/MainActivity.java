@@ -1,11 +1,14 @@
 package com.example.shopping.activity;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
@@ -24,14 +28,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shopping.Interface.ItemClickListener;
 import com.example.shopping.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.shopping.adapter.ProductAdapter;
 import com.example.shopping.model.Cart;
 import com.example.shopping.model.Product;
 import com.example.shopping.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.iammert.library.readablebottombar.ReadableBottomBar;
 import com.nex3z.notificationbadge.NotificationBadge;
-import com.example.shopping.adapter.ProductAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private String userId, userName, userPhoneNumber, userEmail;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
+    private FirebaseFirestore db;
+    private DocumentReference userRef;
     TextView name, price, description;
     Button btnAdd;
     ImageView img;
@@ -68,11 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
-        userId = firebaseUser.getUid();
-        userName = firebaseUser.getDisplayName();
-        userEmail = firebaseUser.getEmail();
-        userPhoneNumber = firebaseUser.getPhoneNumber();
+        db = FirebaseFirestore.getInstance();
 
         badge = findViewById(R.id.menu_amount);
         frameLayout = findViewById(R.id.framecart);
@@ -122,16 +129,36 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 2:
-                        Bundle bundle = new Bundle();
-                        bundle.putString("userId", userId);
-                        bundle.putString("userName", userName);
-                        bundle.putString("userEmail", userEmail);
-                        bundle.putString("userPhoneNumber", userPhoneNumber);
-                        ProfileFragment profileFragment = new ProfileFragment();
-                        profileFragment.setArguments(bundle);
+                        userRef = db.collection("users").document(firebaseUser.getUid());
+                        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.exists()) {
+                                        userId = firebaseUser.getUid();
+                                        userName = document.getString("userName");
+                                        userPhoneNumber = document.getString("userPhoneNumber");
+                                        userEmail = firebaseUser.getEmail();
 
-                        fragmentTransaction.replace(R.id.content, profileFragment);
-                        fragmentTransaction.commit();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("userId", userId);
+                                        bundle.putString("userName", userName);
+                                        bundle.putString("userEmail", userEmail);
+                                        bundle.putString("userPhoneNumber", userPhoneNumber);
+                                        ProfileFragment profileFragment = new ProfileFragment();
+                                        profileFragment.setArguments(bundle);
+
+                                        fragmentTransaction.replace(R.id.content, profileFragment);
+                                        fragmentTransaction.commit();
+                                    } else {
+                                        Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
                         break;
                 }
             }

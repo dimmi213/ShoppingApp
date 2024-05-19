@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
+    private String userId, userName, profileImageUrl, userEmail;
     private CallbackManager callbackManager;
     private static final int RC_SIGN_IN = 9001;
 
@@ -115,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (user != null) {
                                         if (user.isEmailVerified()) {
                                             Toast.makeText(LoginActivity.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
+
                                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                             intent.putExtra("userId", user.getUid());
                                             startActivity(intent);
@@ -270,10 +272,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveUserDataToFirestore(FirebaseUser firebaseUser) {
-        String userId = firebaseUser.getUid();
-        String userEmail = firebaseUser.getEmail();
-        String userName = firebaseUser.getDisplayName();
-        String profileImageUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
+        userId = firebaseUser.getUid();
+        userEmail = firebaseUser.getEmail();
+        userName = firebaseUser.getDisplayName();
+        profileImageUrl = firebaseUser.getPhotoUrl() != null ? firebaseUser.getPhotoUrl().toString() : "";
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

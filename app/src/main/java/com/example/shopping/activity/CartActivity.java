@@ -36,7 +36,6 @@ public class CartActivity extends AppCompatActivity {
     CartAdapter adapter;
     List<Cart> cartList;
     long totalpriceP;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
