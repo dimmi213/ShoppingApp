@@ -17,6 +17,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.shopping.databinding.ActivityRegisterBinding;
 import com.example.shopping.retrofit.ApiShopping;
 import com.example.shopping.retrofit.RetrofitClient;
@@ -142,6 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                             Log.d(TAG, "onFailure: user " + e.toString());
                                                         }
                                                     });
+                                                    saveInMySQLDB();
                                                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                                     finish();
                                                 } else {
@@ -160,6 +167,74 @@ public class RegisterActivity extends AppCompatActivity {
 
 
             }
+
+//            private void saveInMySQLDB() {
+//                String userId = firebaseAuth.getCurrentUser().getUid();
+//                String userName = firebaseAuth.getCurrentUser().getDisplayName();
+//                String userEmail = firebaseAuth.getCurrentUser().getEmail();
+//
+//                RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
+//                String url = Utils.BASE_URL + "postUserRegister.php";
+//                StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.d(TAG, "Response from server: " + response);
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Log.d(TAG, "Error: " + error.toString());
+//                    }
+//                }) {
+//                    @Override
+//                    protected Map<String, String> getParams() {
+//                        Map<String, String> params = new HashMap<>();
+//                        params.put("userId", userId);
+//                        params.put("userName", userName != null ? userName : "");
+//                        params.put("userEmail", userEmail != null ? userEmail : "");
+//                        params.put("userPassword", password.toString());
+//                        params.put("profileImageUrl", "null");
+//                        params.put("userPhoneNumber", "null");
+//                        params.put("userGender", "null");
+//                        params.put("userDoB", "null");
+//                        return params;
+//                    }
+//                };
+//
+//                requestQueue.add(stringRequest);
+//            }
+            private void saveInMySQLDB() {
+                String userId = firebaseAuth.getCurrentUser().getUid();
+//                String userName = firebaseAuth.getCurrentUser().getDisplayName();
+//                String userEmail = firebaseAuth.getCurrentUser().getEmail();
+
+                RequestQueue requestQueue = Volley.newRequestQueue(RegisterActivity.this);
+                String url = Utils.BASE_URL + "postUserRegister.php";
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, "Response from server: " + response);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error: " + error.toString());
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("userId", userId);
+                        params.put("userName", username.getText().toString());
+                        params.put("userEmail", email_address.getText().toString());
+                        params.put("userPassword", password.getText().toString());
+                        return params;
+                    }
+                };
+
+                requestQueue.add(stringRequest);
+            }
+
         });
 
         login.setOnClickListener(new View.OnClickListener() {
