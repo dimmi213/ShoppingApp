@@ -1,18 +1,11 @@
 package com.example.shopping.activity;
 
-import static androidx.core.app.NotificationCompat.getCategory;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.AndroidException;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,27 +16,26 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.shopping.R;
 import com.example.shopping.adapter.CategoryAdapter;
 import com.example.shopping.adapter.ProductAdapter;
 import com.example.shopping.model.Category;
-import com.example.shopping.model.CategoryModel;
 import com.example.shopping.model.Product;
-import com.example.shopping.model.ProductModel;
 import com.example.shopping.retrofit.ApiShopping;
 import com.example.shopping.retrofit.RetrofitClient;
 import com.example.shopping.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-
-import io.reactivex.rxjava3.core.Observable;
 
 
 
@@ -58,6 +50,7 @@ public class HomeFragment extends Fragment {
     ApiShopping apiShopping;
     List<Product> arrProduct;
     ProductAdapter productAdapter;
+    private String userId, userName, userPhoneNumber, userEmail;
 
 
 
@@ -75,6 +68,22 @@ public class HomeFragment extends Fragment {
         recyclerViewHome.setLayoutManager(layoutManager);
         recyclerViewHome.setHasFixedSize(true);
 
+        Bundle args = getArguments();
+        if (args != null) {
+            userId = args.getString("userId");
+            userName = args.getString("userName");
+            userEmail = args.getString("userEmail");
+            userPhoneNumber = args.getString("userPhoneNumber");
+
+            Log.d("HomeFragment", "userId: " + userId);
+            Log.d("HomeFragment", "userName: " + userName);
+            Log.d("HomeFragment", "userEmail: " + userEmail);
+            Log.d("HomeFragment", "userPhoneNumber: " + userPhoneNumber);
+        } else {
+            Log.d("HomeFragment", "Arguments bundle is null");
+        }
+
+
         //khoi tao list
         arrCategory = new ArrayList<>();
         arrProduct = new ArrayList<>();
@@ -90,6 +99,10 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getActivity(), "Connect internet fail", Toast.LENGTH_SHORT).show();
         }
 
+        if(Utils.cartList == null){
+            Utils.cartList = new ArrayList<>();
+        }
+
 
         return v;
     }
@@ -102,9 +115,8 @@ public class HomeFragment extends Fragment {
                         productModel -> {
                             if (productModel.isSuccess()){
                                 arrProduct = productModel.getResult();
-                                productAdapter = new ProductAdapter(getActivity(), arrProduct);
+                                productAdapter = new ProductAdapter(getActivity(), arrProduct, userId, userName, userEmail, userPhoneNumber);
                                 recyclerViewHome.setAdapter(productAdapter);
-
                             }
 
                         },

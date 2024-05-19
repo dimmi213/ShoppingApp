@@ -1,13 +1,13 @@
 package com.example.shopping.model;
 
 public class User {
-    String userId, userEmail, userName, profileImageUrl;
+    String userId, userEmail, userName, userPhoneNumber;
 
-    public User(String userId, String userEmail, String userName, String profileImageUrl) {
+    public User(String userId, String userEmail, String userName, String userPhoneNumber) {
         this.userId = userId;
         this.userEmail = userEmail;
         this.userName = userName;
-        this.profileImageUrl = profileImageUrl;
+        this.userPhoneNumber = userPhoneNumber;
     }
 
     public String getUserId() {
@@ -35,10 +35,10 @@ public class User {
     }
 
     public String getProfileImageUrl() {
-        return profileImageUrl;
+        return userPhoneNumber;
     }
 
     public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+        this.userPhoneNumber = profileImageUrl;
     }
 }

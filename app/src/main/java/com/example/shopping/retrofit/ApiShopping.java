@@ -30,4 +30,19 @@ public interface ApiShopping {
     );
 
 
+
+    @POST("order.php")
+    @FormUrlEncoded
+    Observable<UserModel> createOder(
+            @Field("email") String email,
+            @Field("phonenumber") String phonenumber,
+            @Field("totalprice") String totalPrice,
+            @Field("iduser") String id,
+            @Field("address") String address,
+            @Field("amount") int amount,
+            @Field("detail") String detail
+
+    );
+
+
 }
