@@ -44,6 +44,7 @@ dependencies {
     implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("com.android.volley:volley:1.2.1")
+    implementation ("com.google.android.material:material:1.9.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
