@@ -1,5 +1,6 @@
 package com.example.shopping.activity.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.shopping.R;
+import com.example.shopping.activity.profile.my_orders.Waiting_For_Pay_OrdersFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,10 +76,10 @@ public class Menu_ProfileFragment extends Fragment {
         order_waiting_for_pay = view.findViewById(R.id.order_waiting_for_pay);
         order_waiting_for_delivery = view.findViewById(R.id.order_waiting_for_delivery);
         order_delivery = view.findViewById(R.id.order_delivery);
-        order_rate = view.findViewById(R.id.order_rate);
+//        order_rate = view.findViewById(R.id.order_rate);
         order_delivery = view.findViewById(R.id.order_delivery);
         personal_profile = view.findViewById(R.id.personal_profile);
-        settings = view.findViewById(R.id.settings);
+//        settings = view.findViewById(R.id.settings);
 
         userId = getArguments().getString("userId");
         userName = getArguments().getString("userName");
@@ -100,12 +102,31 @@ public class Menu_ProfileFragment extends Fragment {
             }
         });
 
-        settings.setOnClickListener(new View.OnClickListener() {
+        order_waiting_for_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(new Profile_SettingsFragment());
+                replaceFragment(new Waiting_For_Pay_OrdersFragment());
             }
         });
+
+        order_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Profile_MyOrdersActivity.class);
+                intent.putExtra("userId", userId);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userEmail", userEmail);
+                intent.putExtra("userPhoneNumber", userPhoneNumber);
+                startActivity(intent);
+            }
+        });
+
+//        settings.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                replaceFragment(new Profile_SettingsFragment());
+//            }
+//        });
 
         return view;
     }

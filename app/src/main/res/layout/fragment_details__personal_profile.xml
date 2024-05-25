@@ -200,46 +200,46 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/featureAccountLink"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_border"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/featurePhonenEmail"
-                    app:layout_constraintVertical_bias="0.07">
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/featureAccountLink"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:background="@drawable/rounded_border"-->
+<!--                    android:orientation="vertical"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    android:layout_marginTop="10dp"-->
+<!--                    app:layout_constraintHorizontal_bias="0.0"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/featurePhonenEmail"-->
+<!--                    app:layout_constraintVertical_bias="0.07">-->
 
-                    <RelativeLayout
-                        android:id="@+id/account_link"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginBottom="30dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+<!--                    <RelativeLayout-->
+<!--                        android:id="@+id/account_link"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_marginTop="30dp"-->
+<!--                        android:layout_marginBottom="30dp"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:orientation="horizontal">-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:hint="Tài khoản liên kết"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:gravity="center"-->
+<!--                            android:hint="Tài khoản liên kết"-->
+<!--                            android:textSize="20sp"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:src="@drawable/turn_to"
-                            android:background="@null"/>
-                    </RelativeLayout>
-                </LinearLayout>
+<!--                        <ImageView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="match_parent"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:layout_alignParentRight="true"-->
+<!--                            android:src="@drawable/turn_to"-->
+<!--                            android:background="@null"/>-->
+<!--                    </RelativeLayout>-->
+<!--                </LinearLayout>-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
     </ScrollView>

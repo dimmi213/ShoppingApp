@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
     android:background="#ececec"
     android:orientation="vertical"
-    tools:context=".activity.profile.Profile_MyOrdersFragment">
+    tools:context=".activity.profile.Profile_MyOrdersActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout_my_orders"

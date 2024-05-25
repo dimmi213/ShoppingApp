@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.bsh.commands.dir
 import org.jetbrains.kotlin.storage.CacheResetOnProcessCanceled.enabled
 
 plugins {
@@ -45,6 +46,9 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.8")
     implementation ("com.android.volley:volley:1.2.1")
     implementation ("com.google.android.material:material:1.9.0")
+//    implementation ("com.github.momo-wallet:mobile-sdk:1.0.7")
+//    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+//    implementation("commons-codec:commons-codec:1.14")
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -62,6 +66,7 @@ dependencies {
     implementation(libs.notification)
     implementation(libs.eventbus)
     implementation(libs.gson)
+    implementation(fileTree(mapOf("dir" to "D:\\Studying\\Junior\\Semester 2\\Mobile\\ShoppingApp\\ZaloPay", "include" to listOf("*.aar", "*.jar"))))
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

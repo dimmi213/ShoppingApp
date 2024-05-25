@@ -94,7 +94,7 @@ public class Details_PersonalProfileFragment extends Fragment {
         relative_userDoB = view.findViewById(R.id.relative_userDoB);
         relative_userPhoneNumber = view.findViewById(R.id.relative_userPhoneNumber);
         relative_userEmail = view.findViewById(R.id.relative_userEmail);
-        account_link = view.findViewById(R.id.account_link);
+        //account_link = view.findViewById(R.id.account_link);
 
         userName_edit = view.findViewById(R.id.userName_edit);
         userGender_edit = view.findViewById(R.id.userGender_edit);

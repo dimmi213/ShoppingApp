@@ -8,7 +8,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +21,9 @@
         android:theme="@style/Theme.Shopping"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.profile.Profile_MyOrdersActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.PayActivity"
             android:exported="false" />
@@ -37,8 +40,7 @@
             android:name=".activity.auth.UpdatePhoneNumberActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.auth.LoginActivity"
-
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,7 +48,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.auth.LoginActivity" />
         <activity android:name=".activity.auth.RegisterActivity" />
         <activity android:name=".activity.auth.ForgetPasswordActivity" />
 

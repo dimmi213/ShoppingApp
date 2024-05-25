@@ -41,7 +41,7 @@ public class Profile_MyOrdersAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 6;
     }
 
     @Nullable
